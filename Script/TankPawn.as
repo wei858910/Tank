@@ -22,6 +22,8 @@ class ATankPawn : APawn
     UInputComponent InputComp;
 
     protected float MoveSpeed = 100.;
+    protected bool bMoveHorizontal = false;
+    protected bool bMoveVetical = false;
 
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
@@ -39,7 +41,8 @@ class ATankPawn : APawn
     UFUNCTION()
     private void OnMoveRight(float32 AxisValue)
     {
-        if (AxisValue == 0.f)
+        bMoveHorizontal = AxisValue != 0.f;
+        if (AxisValue == 0.f || bMoveVetical)
         {
             return;
         }
@@ -50,7 +53,8 @@ class ATankPawn : APawn
     UFUNCTION()
     private void OnMoveUp(float32 AxisValue)
     {
-        if (AxisValue == 0.f)
+        bMoveVetical = AxisValue != 0.f;
+        if (AxisValue == 0.f || bMoveHorizontal)
         {
             return;
         }
