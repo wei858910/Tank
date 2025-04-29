@@ -44,7 +44,7 @@ class ATankPawn : APawn
             return;
         }
         TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
-        TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0.f, 0.f));
+        TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
     }
 
     UFUNCTION()
