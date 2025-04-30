@@ -37,8 +37,18 @@ class AMapManager : AActor
         }
     }
 
+    protected void GetMapGridCoordinate(FVector Location, int32& GridX, int32& GridY)
+    {
+        GridX = (Location.X - LeftCornerPositionX) / UnitSize;
+        GridY = (LeftCornerPositionZ - Location.Z) / UnitSize;
+    }
+
     void SpawnWallFromPlayer(FVector Location, EWallType Type = EWallType::EWT_RedWall)
     {
+        int32 GridX = 0;
+        int32 GridY = 0;
+        GetMapGridCoordinate(Location, GridX, GridY);
+        Print(f"({GridX}, {GridY})");
         for (int32 i = 0; i < 4; ++i)
         {
             UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
