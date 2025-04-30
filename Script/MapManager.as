@@ -39,10 +39,17 @@ class AMapManager : AActor
         }
     }
 
-    protected void GetMapGridCoordinate(FVector Location, int32& GridX, int32& GridY)
+    void GetMapGridCoordinate(FVector Location, int32& GridX, int32& GridY)
     {
         GridX = (Location.X - LeftCornerPositionX) / UnitSize;
         GridY = (LeftCornerPositionZ - Location.Z) / UnitSize;
+    }
+
+    FVector ComputeEditModeTankPosition(int32 GridX, int32 GridY)
+    {
+        float X = GridX * UnitSize - LeftCornerPositionX;
+        float Y = LeftCornerPositionZ - GridY * UnitSize;
+        return FVector(X, 0., Y);
     }
 
     int32 GetGridIndex32(int32 GridX, int32 GridY)

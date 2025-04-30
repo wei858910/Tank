@@ -139,5 +139,21 @@ class ATankPawn : APawn
     void SetPlayMode(ETankMode Mode)
     {
         CurrentPlayMode = Mode;
+        if (CurrentPlayMode == ETankMode::ETM_Edit)
+        {
+            ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+            if (IsValid(TankGameMode))
+            {
+                AMapManager MapManager = TankGameMode.GetMapManager();
+                if (IsValid(MapManager))
+                {
+                    int32 GridX = 0;
+                    int32 GridY = 0;
+                    MapManager.GetMapGridCoordinate(TankRenderComp.GetWorldLocation(), GridX, GridY);
+                    FVector AdjestTankPosition = MapManager.ComputeEditModeTankPosition(GridX, GridY);
+                    TankRenderComp.SetWorldLocation(AdjestTankPosition);
+                }
+            }
+        }
     }
 };
