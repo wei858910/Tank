@@ -6,7 +6,7 @@ class ATankPawn : APawn
     UPROPERTY(DefaultComponent)
     UPaperSpriteComponent TankRenderComp;
 
-    UPaperSprite TankSprite = Cast<UPaperSprite>(LoadObject(nullptr, "/Game/Textures/tankAll_Sprite.tankAll_Sprite"));
+    UPaperSprite TankSprite = Cast<UPaperSprite>(LoadObject(nullptr, "/Game/Textures/tank_Sprite.tank_Sprite"));
     default TankRenderComp.SetSprite(TankSprite);
 
     protected float OrthoWidth = 500.;
