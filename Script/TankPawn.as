@@ -1,3 +1,9 @@
+enum ETankMode
+{
+    ETM_Play,
+    ETM_Edit
+}
+
 class ATankPawn : APawn
 {
     UPROPERTY(DefaultComponent, RootComponent)
@@ -25,6 +31,14 @@ class ATankPawn : APawn
     protected bool bMoveHorizontal = false;
     protected bool bMoveVetical = false;
 
+    protected ETankMode CurrentPlayMode = ETankMode::ETM_Play;
+
+    protected float UnitSize = 32.;
+
+    protected float EditMovementTimeInterval = 0.2;
+    protected float LastEditHorizontalMovementTime = 0.;
+    protected float LastEditVerticalMovementTime = 0.;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
@@ -41,24 +55,60 @@ class ATankPawn : APawn
     UFUNCTION()
     private void OnMoveRight(float32 AxisValue)
     {
-        bMoveHorizontal = AxisValue != 0.f;
-        if (AxisValue == 0.f || bMoveVetical)
+        if (CurrentPlayMode == ETankMode::ETM_Play)
         {
-            return;
+            bMoveHorizontal = AxisValue != 0.f;
+            if (AxisValue == 0.f || bMoveVetical)
+            {
+                return;
+            }
+            TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
+            TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
         }
-        TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
-        TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
+        else
+        {
+            if (Gameplay::GetTimeSeconds() - LastEditHorizontalMovementTime > EditMovementTimeInterval)
+            {
+                TankRenderComp.AddRelativeLocation(FVector::ForwardVector * UnitSize * AxisValue);
+                LastEditHorizontalMovementTime = Gameplay::GetTimeSeconds();
+            }
+
+            if (AxisValue == 0.)
+            {
+                LastEditHorizontalMovementTime = 0.;
+            }
+        }
     }
 
     UFUNCTION()
     private void OnMoveUp(float32 AxisValue)
     {
-        bMoveVetical = AxisValue != 0.f;
-        if (AxisValue == 0.f || bMoveHorizontal)
+        if (CurrentPlayMode == ETankMode::ETM_Play)
         {
-            return;
+            bMoveVetical = AxisValue != 0.f;
+            if (AxisValue == 0.f || bMoveHorizontal)
+            {
+                return;
+            }
+            TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
+            TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 90. : -90., 0., 0.));
         }
-        TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
-        TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 90. : -90., 0., 0.));
+        else
+        {
+            if (Gameplay::GetTimeSeconds() - LastEditVerticalMovementTime > EditMovementTimeInterval)
+            {
+                TankRenderComp.AddRelativeLocation(FVector::UpVector * UnitSize * AxisValue);
+                LastEditVerticalMovementTime = Gameplay::GetTimeSeconds();
+            }
+            if (AxisValue == 0.)
+            {
+                LastEditVerticalMovementTime = 0.;
+            }
+        }
+    }
+
+    void SetPlayMode(ETankMode Mode)
+    {
+        CurrentPlayMode = Mode;
     }
 };
