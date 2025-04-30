@@ -50,6 +50,23 @@ class ATankPawn : APawn
     UFUNCTION()
     private void OnFire(FKey Key)
     {
+        if (CurrentPlayMode == ETankMode::ETM_Play)
+        {
+            // 开炮
+        }
+        else
+        {
+            // 编辑墙壁
+            ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+            if (IsValid(TankGameMode))
+            {
+                AMapManager MapManager = TankGameMode.GetMapManager();
+                if (IsValid(MapManager))
+                {
+                    MapManager.SpawnWallFromPlayer(TankRenderComp.GetWorldLocation());
+                }
+            }
+        }
     }
 
     UFUNCTION()

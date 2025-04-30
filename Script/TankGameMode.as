@@ -11,6 +11,11 @@ class ATankGameMode : AGameMode
         MapManager = Cast<AMapManager>(SpawnActor(AMapManager::StaticClass()));
     }
 
+    AMapManager GetMapManager()
+    {
+        return MapManager;
+    }
+
     UFUNCTION(Exec)
     void ChangePlayGameMode(int32 Mode)
     {

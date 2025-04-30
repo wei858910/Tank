@@ -34,4 +34,13 @@ class AMapManager : AActor
             System::DrawDebugLine(Start, End, FLinearColor::White);
         }
     }
+
+    void SpawnWallFromPlayer(FVector Location)
+    {
+        Print("生成墙壁");
+        UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
+        Wall.SetWallType(EWallType::EWT_RedWall);
+        Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
+        Wall.SetWorldLocation(Location);
+    }
 };
