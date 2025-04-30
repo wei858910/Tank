@@ -25,10 +25,10 @@ class UWallSpriteComponent : UPaperSpriteComponent
         {
             case EWallType::EWT_None:
                 SetSprite(nullptr);
-                WallSpritePath = "/Game/Textures/red_wall_Sprite.red_wall_Sprite";
-                break;
+                return;
 
             case EWallType::EWT_RedWall:
+                WallSpritePath = "/Game/Textures/red_wall_Sprite.red_wall_Sprite";
                 break;
 
             case EWallType::EWT_Iron:
