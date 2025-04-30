@@ -15,7 +15,7 @@ class ATankPawn : APawn
     UCameraComponent Camera;
     default Camera.SetProjectionMode(ECameraProjectionMode::Orthographic);
     default Camera.SetOrthoWidth(OrthoWidth);
-    default Camera.SetRelativeRotation(FRotator(0., 90., 0.));
+    default Camera.SetRelativeRotation(FRotator(0., -90., 0.));
     default Camera.SetRelativeLocation(FVector(0., 100., 0.));
 
     UPROPERTY(DefaultComponent)
