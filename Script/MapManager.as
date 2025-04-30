@@ -44,7 +44,7 @@ class AMapManager : AActor
             UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
             Wall.SetWallType(Type);
             Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
-            Wall.SetWorldLocation(FVector(Location.X + (i % 2) * BrickWidth - HalfBrickWidth, 0., Location.Z - (i / 2) * BrickWidth + HalfBrickWidth));
+            Wall.SetWorldLocation(FVector(Location.X + (i % 2) * BrickWidth - HalfBrickWidth, 1., Location.Z - (i / 2) * BrickWidth + HalfBrickWidth));
         }
     }
 };
