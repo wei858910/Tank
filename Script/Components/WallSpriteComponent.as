@@ -12,6 +12,11 @@ class UWallSpriteComponent : UPaperSpriteComponent
 {
     protected EWallType WallType = EWallType::EWT_None;
 
+    EWallType GetCurrentWallType()
+    {
+        return WallType;
+    }
+
     void SetWallType(EWallType Type)
     {
         if (WallType == Type)

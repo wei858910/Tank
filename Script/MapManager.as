@@ -10,6 +10,8 @@ class AMapManager : AActor
     protected float BrickWidth = 16.;
     protected float HalfBrickWidth = 8.;
 
+    protected TMap<int32, UWallSpriteComponent> MapData;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
@@ -43,18 +45,47 @@ class AMapManager : AActor
         GridY = (LeftCornerPositionZ - Location.Z) / UnitSize;
     }
 
+    int32 GetGridIndex32(int32 GridX, int32 GridY)
+    {
+        return GridY * (BrickNums - 1) + GridX;
+    }
+
+    int32 GetGridIndex16(int32 GridX, int32 GridY)
+    {
+        return GridY * (BrickNums - 1) * 2 + GridX;
+    }
+
     void SpawnWallFromPlayer(FVector Location, EWallType Type = EWallType::EWT_RedWall)
     {
         int32 GridX = 0;
         int32 GridY = 0;
         GetMapGridCoordinate(Location, GridX, GridY);
+        GridX *= 2;
+        GridY *= 2;
+
         Print(f"({GridX}, {GridY})");
         for (int32 i = 0; i < 4; ++i)
         {
-            UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
-            Wall.SetWallType(Type);
-            Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
-            Wall.SetWorldLocation(FVector(Location.X + (i % 2) * BrickWidth - HalfBrickWidth, 1., Location.Z - (i / 2) * BrickWidth + HalfBrickWidth));
+            int32 TempGridX = i % 2;
+            int32 TempGridY = i / 2;
+
+            int32 GridIndex = GetGridIndex16(GridX + TempGridX, GridY + TempGridY);
+            if (MapData.Contains(GridIndex) && IsValid(MapData[GridIndex]))
+            {
+                if (MapData[GridIndex].GetCurrentWallType() != Type)
+                {
+                    MapData[GridIndex].SetWallType(Type);
+                }
+            }
+            else
+            {
+                UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
+                Wall.SetWallType(Type);
+                Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
+                Wall.SetWorldLocation(FVector(Location.X + (i % 2) * BrickWidth - HalfBrickWidth, 1., Location.Z - (i / 2) * BrickWidth + HalfBrickWidth));
+                // MapData[GridIndex] = Wall;
+                MapData.Add(GridIndex, Wall);
+            }
         }
     }
 };
