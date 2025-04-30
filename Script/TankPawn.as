@@ -39,12 +39,24 @@ class ATankPawn : APawn
     protected float LastEditHorizontalMovementTime = 0.;
     protected float LastEditVerticalMovementTime = 0.;
 
+    protected uint8 CurrentSpawnWallType = 0;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
+        InputComp.BindAction(n"TurnWallType", EInputEvent::IE_Pressed, Delegate = FInputActionHandlerDynamicSignature(this, n"OnTurnWalltype"));
         InputComp.BindAction(n"Fire", EInputEvent::IE_Pressed, Delegate = FInputActionHandlerDynamicSignature(this, n"OnFire"));
         InputComp.BindAxis(n"MoveRight", Delegate = FInputAxisHandlerDynamicSignature(this, n"OnMoveRight"));
         InputComp.BindAxis(n"MoveUp", Delegate = FInputAxisHandlerDynamicSignature(this, n"OnMoveUp"));
+    }
+
+    UFUNCTION()
+    private void OnTurnWalltype(FKey Key)
+    {
+        if (++CurrentSpawnWallType > uint8(EWallType::EWT_Ice))
+        {
+            CurrentSpawnWallType = 0;
+        }
     }
 
     UFUNCTION()
@@ -63,7 +75,7 @@ class ATankPawn : APawn
                 AMapManager MapManager = TankGameMode.GetMapManager();
                 if (IsValid(MapManager))
                 {
-                    MapManager.SpawnWallFromPlayer(TankRenderComp.GetWorldLocation());
+                    MapManager.SpawnWallFromPlayer(TankRenderComp.GetWorldLocation(), EWallType(CurrentSpawnWallType));
                 }
             }
         }
