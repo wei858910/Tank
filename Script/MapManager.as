@@ -47,8 +47,8 @@ class AMapManager : AActor
 
     FVector ComputeEditModeTankPosition(int32 GridX, int32 GridY)
     {
-        float X = GridX * UnitSize - LeftCornerPositionX;
-        float Y = LeftCornerPositionZ - GridY * UnitSize;
+        float X = GridX * UnitSize + LeftCornerPositionX + BrickWidth;
+        float Y = LeftCornerPositionZ - GridY * UnitSize - BrickWidth;
         return FVector(X, 0., Y);
     }
 

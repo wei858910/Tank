@@ -151,7 +151,7 @@ class ATankPawn : APawn
                     int32 GridY = 0;
                     MapManager.GetMapGridCoordinate(TankRenderComp.GetWorldLocation(), GridX, GridY);
                     FVector AdjestTankPosition = MapManager.ComputeEditModeTankPosition(GridX, GridY);
-                    TankRenderComp.SetWorldLocation(AdjestTankPosition);
+                    TankRenderComp.SetRelativeLocation(AdjestTankPosition);
                 }
             }
         }
