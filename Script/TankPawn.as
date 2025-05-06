@@ -41,6 +41,11 @@ class ATankPawn : APawn
 
     protected uint8 CurrentSpawnWallType = 0;
 
+    protected float MoveSoundDuration = 0.;
+    protected float LastPlaySoundTime = 0.;
+
+    protected ATankGameMode TankGameMode;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
@@ -48,6 +53,12 @@ class ATankPawn : APawn
         InputComp.BindAction(n"Fire", EInputEvent::IE_Pressed, Delegate = FInputActionHandlerDynamicSignature(this, n"OnFire"));
         InputComp.BindAxis(n"MoveRight", Delegate = FInputAxisHandlerDynamicSignature(this, n"OnMoveRight"));
         InputComp.BindAxis(n"MoveUp", Delegate = FInputAxisHandlerDynamicSignature(this, n"OnMoveUp"));
+
+        TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+        if (IsValid(TankGameMode))
+        {
+            MoveSoundDuration = TankGameMode.GetSoundManager().GetSoundDuration(SoundName::MoveSound);
+        }
     }
 
     UFUNCTION()
@@ -96,6 +107,17 @@ class ATankPawn : APawn
             {
                 return;
             }
+
+            if (Gameplay::GetTimeSeconds() - LastPlaySoundTime > MoveSoundDuration)
+            {
+                if (IsValid(TankGameMode))
+                {
+                    LastPlaySoundTime = Gameplay::GetTimeSeconds();
+
+                    TankGameMode.GetSoundManager().PlayGameSound(SoundName::MoveSound);
+                }
+            }
+
             FHitResult HitResult;
             TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
             TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
@@ -125,6 +147,17 @@ class ATankPawn : APawn
             {
                 return;
             }
+
+            if (Gameplay::GetTimeSeconds() - LastPlaySoundTime > MoveSoundDuration)
+            {
+                if (IsValid(TankGameMode))
+                {
+                    LastPlaySoundTime = Gameplay::GetTimeSeconds();
+
+                    TankGameMode.GetSoundManager().PlayGameSound(SoundName::MoveSound);
+                }
+            }
+
             FHitResult HitResult;
             TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
             TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 90. : -90., 0., 0.));

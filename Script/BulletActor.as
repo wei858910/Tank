@@ -37,6 +37,11 @@ class ABulletActor : AActor
     void DoFire(float Speed = 130.)
     {
         BulletSpeed = Speed;
+        ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+        if (IsValid(TankGameMode))
+        {
+            TankGameMode.GetSoundManager().PlayGameSound(SoundName::FireSound);
+        }
     }
 
     void UpdateBulletFly(float DeltaSeconds)
@@ -55,6 +60,7 @@ class ABulletActor : AActor
         ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
         if (IsValid(TankGameMode))
         {
+            TankGameMode.GetSoundManager().PlayGameSound(SoundName::BulletCrackSound);
             TankGameMode.GetEffectMamager().PlayEffect(EffectName::BulletBoom, GetActorLocation());
         }
     }

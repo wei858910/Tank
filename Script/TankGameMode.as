@@ -8,12 +8,15 @@ class ATankGameMode : AGameMode
     UPROPERTY()
     UEffectManager EffectManager;
 
+    protected USoundManager SoundManager;
+
     ATankPawn TankPawn;
 
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
         MapManager = Cast<AMapManager>(SpawnActor(AMapManager::StaticClass()));
+        GetSoundManager().PlayGameSound(SoundName::StartSound);
     }
 
     AMapManager GetMapManager()
@@ -29,6 +32,17 @@ class ATankGameMode : AGameMode
             EffectManager.Init();
         }
         return EffectManager;
+    }
+
+    USoundManager GetSoundManager()
+    {
+        if (!IsValid(SoundManager))
+        {
+            SoundManager = Cast<USoundManager>(NewObject(this, USoundManager::StaticClass()));
+            SoundManager.Init();
+        }
+
+        return SoundManager;
     }
 
     UFUNCTION(Exec)
