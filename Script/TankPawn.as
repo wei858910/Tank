@@ -91,7 +91,8 @@ class ATankPawn : APawn
             {
                 return;
             }
-            TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
+            FHitResult HitResult;
+            TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
             TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
         }
         else
@@ -119,7 +120,8 @@ class ATankPawn : APawn
             {
                 return;
             }
-            TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue);
+            FHitResult HitResult;
+            TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
             TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 90. : -90., 0., 0.));
         }
         else

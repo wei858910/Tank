@@ -96,7 +96,7 @@ class AMapManager : AActor
                 UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
                 Wall.SetWallType(Type);
                 Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
-                Wall.SetWorldLocation(FVector(Location.X + (i % 2) * BrickWidth - HalfBrickWidth, 1., Location.Z - (i / 2) * BrickWidth + HalfBrickWidth));
+                Wall.SetWorldLocation(FVector(Location.X + (i % 2) * BrickWidth - HalfBrickWidth, Wall.GetSelfYPosition(), Location.Z - (i / 2) * BrickWidth + HalfBrickWidth));
                 // MapData[GridIndex] = Wall;
                 MapData.Add(GridIndex, Wall);
             }
@@ -147,7 +147,7 @@ class AMapManager : AActor
                     UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
                     Wall.SetWallType(EWallType(NumType));
                     Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
-                    Wall.SetWorldLocation(FVector(LeftCornerPositionX + GridX * BrickWidth + HalfBrickWidth, 1., LeftCornerPositionZ - GridY * BrickWidth - HalfBrickWidth));
+                    Wall.SetWorldLocation(FVector(LeftCornerPositionX + GridX * BrickWidth + HalfBrickWidth, Wall.GetSelfYPosition(), LeftCornerPositionZ - GridY * BrickWidth - HalfBrickWidth));
                     // MapData[GridIndex] = Wall;
                     MapData.Add(i, Wall);
                 }

@@ -60,4 +60,18 @@ class UWallSpriteComponent : UPaperSpriteComponent
 
         WallType = Type;
     }
+
+    float GetSelfYPosition()
+    {
+        if (WallType == EWallType::EWT_Grass)
+        {
+            return 20.;
+        }
+        else if (WallType == EWallType::EWT_Ice)
+        {
+            return -20.;
+        }
+
+        return 1.;
+    }
 };
