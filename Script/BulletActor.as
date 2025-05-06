@@ -21,6 +21,12 @@ class ABulletActor : AActor
         {
             if (Wall.Hited())
             {
+                AEffectActor Effector = Cast<AEffectActor>(SpawnActor(AEffectActor::StaticClass(), GetActorLocation()));
+                if (IsValid(Effector))
+                {
+                    FString EffectPath = "/Game/Textures/Effect/tankBulletEffect.tankBulletEffect";
+                    Effector.PlayEffect(GetActorLocation(), EffectPath);
+                }
                 DestroyActor();
             }
         }
@@ -44,6 +50,7 @@ class ABulletActor : AActor
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
+        SetLifeSpan(15.);
     }
 
     UFUNCTION(BlueprintOverride)
