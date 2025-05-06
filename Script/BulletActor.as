@@ -21,20 +21,22 @@ class ABulletActor : AActor
         {
             if (Wall.Hited())
             {
-                AEffectActor Effector = Cast<AEffectActor>(SpawnActor(AEffectActor::StaticClass(), GetActorLocation()));
-                if (IsValid(Effector))
-                {
-                    FString EffectPath = "/Game/Textures/Effect/tankBulletEffect.tankBulletEffect";
-                    Effector.PlayEffect(GetActorLocation(), EffectPath);
-                }
                 DestroyActor();
             }
+        }
+        else if (IsValid(Cast<UBoxComponent>(OtherComp)))
+        {
+            DestroyActor();
+        }
+        else if (IsValid(Cast<ABulletActor>(OtherActor)))
+        {
+            DestroyActor();
         }
     }
 
     void DoFire(float Speed = 130.)
     {
-        BulletSpeed = Speed;
+        BulletSpeed = Speed * 0.0;
     }
 
     void UpdateBulletFly(float DeltaSeconds)
@@ -48,9 +50,18 @@ class ABulletActor : AActor
     }
 
     UFUNCTION(BlueprintOverride)
+    void Destroyed()
+    {
+        ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+        if (IsValid(TankGameMode))
+        {
+            TankGameMode.GetEffectMamager().PlayEffect(EffectName::BulletBoom, GetActorLocation());
+        }
+    }
+
+    UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
-        SetLifeSpan(15.);
     }
 
     UFUNCTION(BlueprintOverride)

@@ -12,11 +12,8 @@ class AEffectActor : AActor
     {
     }
 
-    void PlayEffect(FVector Location, FString Path)
+    void PlayEffect(UPaperFlipbook Effect)
     {
-        SetActorLocation(Location);
-
-        UPaperFlipbook Effect = Cast<UPaperFlipbook>(LoadObject(nullptr, Path));
         if (IsValid(Effect))
         {
             EffectRenderComp.SetFlipbook(Effect);

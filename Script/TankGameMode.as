@@ -2,8 +2,13 @@ class ATankGameMode : AGameMode
 {
     default DefaultPawnClass = ATankPawn::StaticClass();
 
+    UPROPERTY()
     AMapManager MapManager;
-    ATankPawn   TankPawn;
+
+    UPROPERTY()
+    UEffectManager EffectManager;
+
+    ATankPawn TankPawn;
 
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
@@ -14,6 +19,16 @@ class ATankGameMode : AGameMode
     AMapManager GetMapManager()
     {
         return MapManager;
+    }
+
+    UEffectManager GetEffectMamager()
+    {
+        if (!IsValid(EffectManager))
+        {
+            EffectManager = Cast<UEffectManager>(NewObject(this, UEffectManager::StaticClass()));
+            EffectManager.Init();
+        }
+        return EffectManager;
     }
 
     UFUNCTION(Exec)
