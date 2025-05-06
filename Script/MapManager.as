@@ -14,6 +14,30 @@ class AMapManager : AActor
 
     protected TMap<int32, UWallSpriteComponent> MapData;
 
+    UPROPERTY(DefaultComponent)
+    UBoxComponent UpBoxComp;
+    default UpBoxComp.SetCollisionProfileName(n"InvisibleWall");
+    default UpBoxComp.SetRelativeLocation(FVector(0., 0., 7.5 * UnitSize));
+    default UpBoxComp.SetBoxExtent(FVector(7 * UnitSize, 32., 32.));
+
+    UPROPERTY(DefaultComponent)
+    UBoxComponent DownBoxComp;
+    default DownBoxComp.SetCollisionProfileName(n"InvisibleWall");
+    default DownBoxComp.SetRelativeLocation(FVector(0., 0., -7.5 * UnitSize));
+    default DownBoxComp.SetBoxExtent(FVector(7 * UnitSize, 32., 32.));
+
+    UPROPERTY(DefaultComponent)
+    UBoxComponent LeftBoxComp;
+    default LeftBoxComp.SetCollisionProfileName(n"InvisibleWall");
+    default LeftBoxComp.SetRelativeLocation(FVector(-7.5 * UnitSize, 0., 0.));
+    default LeftBoxComp.SetBoxExtent(FVector(32., 32., 7 * UnitSize));
+
+    UPROPERTY(DefaultComponent)
+    UBoxComponent RightBoxComp;
+    default RightBoxComp.SetCollisionProfileName(n"InvisibleWall");
+    default RightBoxComp.SetRelativeLocation(FVector(7.5 * UnitSize, 0., 0.));
+    default RightBoxComp.SetBoxExtent(FVector(32., 32., 7 * UnitSize));
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
