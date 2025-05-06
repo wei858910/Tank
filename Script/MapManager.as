@@ -9,6 +9,7 @@ class AMapManager : AActor
     protected int32 BrickNums = 14;
     protected float BrickWidth = 16.;
     protected float HalfBrickWidth = 8.;
+    protected int32 MapGridCells = 26 * 26;
 
     protected TMap<int32, UWallSpriteComponent> MapData;
 
@@ -99,5 +100,33 @@ class AMapManager : AActor
                 MapData.Add(GridIndex, Wall);
             }
         }
+    }
+
+    void SaveMapData(const FString& MapName)
+    {
+        FString MapStr;
+        for (int32 i = 0; i < MapGridCells; ++i)
+        {
+            if (MapData.Contains(i))
+            {
+                MapStr.Append(FString(f"{int32(MapData[i].GetCurrentWallType())}"));
+            }
+            else
+            {
+                MapStr.Append("0");
+            }
+
+            if (i != MapGridCells - 1)
+            {
+                MapStr.Append(",");
+            }
+        }
+        Print(MapStr);
+
+        FFileHelper::SaveStringToFile(MapStr, Paths::ProjectSavedDir() + MapName + ".mp");
+    }
+
+    void LoadMapData(const FString& MapName)
+    {
     }
 };

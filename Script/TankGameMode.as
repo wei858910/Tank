@@ -39,4 +39,22 @@ class ATankGameMode : AGameMode
             }
         }
     }
+
+    UFUNCTION(Exec)
+    void SaveMapData(const FString& MapName)
+    {
+        if (IsValid(MapManager))
+        {
+            MapManager.SaveMapData(MapName);
+        }
+    }
+
+    UFUNCTION(Exec)
+    void LoadMapData(const FString& MapName)
+    {
+        if (IsValid(MapManager))
+        {
+            MapManager.LoadMapData(MapName);
+        }
+    }
 };
