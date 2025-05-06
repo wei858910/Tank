@@ -29,7 +29,6 @@ class UWallSpriteComponent : UPaperSpriteComponent
         switch (Type)
         {
             case EWallType::EWT_None:
-                SetSprite(nullptr);
                 return;
 
             case EWallType::EWT_RedWall:

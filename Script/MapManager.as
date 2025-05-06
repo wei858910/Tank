@@ -79,7 +79,12 @@ class AMapManager : AActor
             int32 GridIndex = GetGridIndex16(GridX + TempGridX, GridY + TempGridY);
             if (MapData.Contains(GridIndex) && IsValid(MapData[GridIndex]))
             {
-                if (MapData[GridIndex].GetCurrentWallType() != Type)
+                if (Type == EWallType::EWT_None)
+                {
+                    MapData[GridIndex].DestroyComponent(MapData[GridIndex]);
+                    MapData.Remove(GridIndex);
+                }
+                else
                 {
                     MapData[GridIndex].SetWallType(Type);
                 }
