@@ -9,7 +9,8 @@ class AMapManager : AActor
     protected int32 BrickNums = 14;
     protected float BrickWidth = 16.;
     protected float HalfBrickWidth = 8.;
-    protected int32 MapGridCells = 26 * 26;
+    protected int32 SingleLineCells = 26;
+    protected int32 MapGridCells = SingleLineCells * SingleLineCells;
 
     protected TMap<int32, UWallSpriteComponent> MapData;
 
@@ -128,5 +129,28 @@ class AMapManager : AActor
 
     void LoadMapData(const FString& MapName)
     {
+        FString MapStr;
+        if (FFileHelper::LoadFileToString(MapStr, Paths::ProjectSavedDir() + MapName + ".mp"))
+        {
+            Print(MapStr);
+            TArray<FString> MapFlagArray;
+            MapStr.ParseIntoArray(MapFlagArray, ",");
+            for (int32 i = 0; i < MapFlagArray.Num(); ++i)
+            {
+                int32 NumType = String::Conv_StringToInt(MapFlagArray[i]);
+                if (NumType != 0)
+                {
+                    int32 GridX = i % SingleLineCells;
+                    int32 GridY = i / SingleLineCells;
+
+                    UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(CreateComponent(UWallSpriteComponent::StaticClass()));
+                    Wall.SetWallType(EWallType(NumType));
+                    Wall.AttachToComponent(Root, AttachmentRule = EAttachmentRule::SnapToTarget);
+                    Wall.SetWorldLocation(FVector(LeftCornerPositionX + GridX * BrickWidth + HalfBrickWidth, 1., LeftCornerPositionZ - GridY * BrickWidth - HalfBrickWidth));
+                    // MapData[GridIndex] = Wall;
+                    MapData.Add(i, Wall);
+                }
+            }
+        }
     }
 };
