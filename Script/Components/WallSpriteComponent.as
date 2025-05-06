@@ -74,4 +74,19 @@ class UWallSpriteComponent : UPaperSpriteComponent
 
         return 1.;
     }
+
+    bool Hited()
+    {
+        if (WallType == EWallType::EWT_Iron)
+        {
+            return true;
+        }
+        else if (WallType == EWallType::EWT_Water)
+        {
+            return false;
+        }
+
+        DestroyComponent(this);
+        return true;
+    }
 };

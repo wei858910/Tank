@@ -16,6 +16,14 @@ class ABulletActor : AActor
     UFUNCTION()
     private void OnBulletBeginOverlap(UPrimitiveComponent OverlappedComponent, AActor OtherActor, UPrimitiveComponent OtherComp, int OtherBodyIndex, bool bFromSweep, const FHitResult&in SweepResult)
     {
+        UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(OtherComp);
+        if (IsValid(Wall))
+        {
+            if (Wall.Hited())
+            {
+                DestroyActor();
+            }
+        }
     }
 
     void DoFire(float Speed = 130.)
