@@ -12,8 +12,9 @@ class AEffectActor : AActor
     {
     }
 
-    void PlayEffect(UPaperFlipbook Effect)
+    void PlayEffect(FVector PlayPosition, UPaperFlipbook Effect)
     {
+        SetActorLocation(PlayPosition);
         if (IsValid(Effect))
         {
             EffectRenderComp.SetFlipbook(Effect);
@@ -24,6 +25,16 @@ class AEffectActor : AActor
     UFUNCTION()
     private void PlayEnd()
     {
-        DestroyActor();
+        IdleSelf();
+    }
+
+    protected void IdleSelf()
+    {
+        EffectRenderComp.SetFlipbook(nullptr);
+        ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+        if (IsValid(TankGameMode))
+        {
+            TankGameMode.GetEffectMamager().AddEffectActorToIdleArray(this);
+        }
     }
 };

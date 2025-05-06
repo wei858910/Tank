@@ -36,7 +36,7 @@ class ABulletActor : AActor
 
     void DoFire(float Speed = 130.)
     {
-        BulletSpeed = Speed * 0.0;
+        BulletSpeed = Speed;
     }
 
     void UpdateBulletFly(float DeltaSeconds)
