@@ -72,4 +72,18 @@ class ATankGameMode : AGameMode
             MapManager.LoadMapData(MapName);
         }
     }
+
+    UFUNCTION(Exec)
+    void TestFollowEffect()
+    {
+        if (!IsValid(TankPawn))
+        {
+            TankPawn = Cast<ATankPawn>(Gameplay::GetPlayerPawn(0));
+        }
+
+        if (IsValid(TankPawn))
+        {
+            GetEffectMamager().PlayEffect(EffectName::Invincibility, TankPawn.TankRenderComp.GetWorldLocation(), TankPawn.TankRenderComp, 100);
+        }
+    }
 };

@@ -29,9 +29,10 @@ class UEffectManager : UObject
         EffectSourceMap.Add(NameOfEffect, EffectSource);
     }
 
-    void PlayEffect(FName NameOfEffect, FVector PlayPosition)
+    void PlayEffect(FName NameOfEffect, FVector PlayPosition, USceneComponent FollowTarget = nullptr, float Duration = -1)
     {
-        if (!EffectSourceMap.Contains(NameOfEffect))
+        UPaperFlipbook PaperFlipbook = GetFlipBookSourceByName(NameOfEffect);
+        if (!IsValid(PaperFlipbook))
         {
             return;
         }
@@ -39,7 +40,7 @@ class UEffectManager : UObject
         AEffectActor EffectActor = GetIdleEffectActor();
         if (IsValid(EffectActor))
         {
-            EffectActor.PlayEffect(PlayPosition, GetFlipBookSourceByName(NameOfEffect));
+            EffectActor.PlayEffect(PlayPosition, PaperFlipbook, FollowTarget, Duration);
         }
     }
 
