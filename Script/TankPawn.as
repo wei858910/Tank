@@ -65,6 +65,11 @@ class ATankPawn : APawn
         if (CurrentPlayMode == ETankMode::ETM_Play)
         {
             // 开炮
+            ABulletActor Bullet = Cast<ABulletActor>(SpawnActor(ABulletActor::StaticClass(), TankRenderComp.GetRelativeLocation() + TankRenderComp.GetForwardVector() * 25, TankRenderComp.GetRelativeRotation()));
+            if (IsValid(Bullet))
+            {
+                Bullet.DoFire();
+            }
         }
         else
         {
