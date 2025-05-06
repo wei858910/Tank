@@ -1,11 +1,13 @@
 namespace EffectName
 {
     const FName BulletBoom = n"BulletBoom";
+    const FName Invincibility = n"Invincibility";
 }
 
 namespace EffectPath
 {
     const FString BulletEffectPath = "/Game/Textures/Effect/tankBulletEffect.tankBulletEffect";
+    const FString InvincibilityPath = "/Game/Textures/Effect/tankInvincibilityEffect.tankInvincibilityEffect";
 }
 
 struct FEffectSource
@@ -42,6 +44,7 @@ class UEffectManager : UObject
     void Init()
     {
         RegistEffect(EffectName::BulletBoom, EffectPath::BulletEffectPath);
+        RegistEffect(EffectName::Invincibility, EffectPath::InvincibilityPath);
     }
 
     UPaperFlipbook GetFlipBookSourceByName(FName NameOfEffect)
