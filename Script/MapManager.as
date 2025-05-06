@@ -129,6 +129,7 @@ class AMapManager : AActor
 
     void LoadMapData(const FString& MapName)
     {
+        ClearMapData();
         FString MapStr;
         if (FFileHelper::LoadFileToString(MapStr, Paths::ProjectSavedDir() + MapName + ".mp"))
         {
@@ -152,5 +153,15 @@ class AMapManager : AActor
                 }
             }
         }
+    }
+
+    void ClearMapData()
+    {
+        for (auto Item : MapData)
+        {
+            Item.Value.DestroyComponent(Item.Value);
+        }
+
+        MapData.Reset();
     }
 };
