@@ -23,6 +23,7 @@ class ATankPawn : APawn
 
     UPaperSprite TankSprite = Cast<UPaperSprite>(LoadObject(nullptr, "/Game/Textures/tank_Sprite.tank_Sprite"));
     default TankRenderComp.SetSprite(TankSprite);
+    default TankRenderComp.SetHiddenInGame(true);
 
     protected float OrthoWidth = 500.;
 
@@ -58,6 +59,9 @@ class ATankPawn : APawn
     protected ABulletActor HoldBullet = nullptr;
 
     protected EPlayerTankState CurrentTankState = EPlayerTankState::EPTS_Normal;
+    protected EPlayerTankState NeedChangeTankState = EPlayerTankState::EPTS_Normal;
+
+    protected float SpawnTime = 2.5;
 
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
@@ -124,25 +128,28 @@ class ATankPawn : APawn
     {
         if (CurrentPlayMode == ETankMode::ETM_Play)
         {
-            bMoveHorizontal = AxisValue != 0.f;
-            if (AxisValue == 0.f || bMoveVetical)
+            if (CanMove())
             {
-                return;
-            }
-
-            if (Gameplay::GetTimeSeconds() - LastPlaySoundTime > MoveSoundDuration)
-            {
-                if (IsValid(TankGameMode))
+                bMoveHorizontal = AxisValue != 0.f;
+                if (AxisValue == 0.f || bMoveVetical)
                 {
-                    LastPlaySoundTime = Gameplay::GetTimeSeconds();
-
-                    TankGameMode.GetSoundManager().PlayGameSound(SoundName::MoveSound);
+                    return;
                 }
-            }
 
-            FHitResult HitResult;
-            TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
-            TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
+                if (Gameplay::GetTimeSeconds() - LastPlaySoundTime > MoveSoundDuration)
+                {
+                    if (IsValid(TankGameMode))
+                    {
+                        LastPlaySoundTime = Gameplay::GetTimeSeconds();
+
+                        TankGameMode.GetSoundManager().PlayGameSound(SoundName::MoveSound);
+                    }
+                }
+
+                FHitResult HitResult;
+                TankRenderComp.AddRelativeLocation(FVector::ForwardVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
+                TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 0. : 180., 0., 0.));
+            }
         }
         else
         {
@@ -164,25 +171,28 @@ class ATankPawn : APawn
     {
         if (CurrentPlayMode == ETankMode::ETM_Play)
         {
-            bMoveVetical = AxisValue != 0.f;
-            if (AxisValue == 0.f || bMoveHorizontal)
+            if (CanMove())
             {
-                return;
-            }
-
-            if (Gameplay::GetTimeSeconds() - LastPlaySoundTime > MoveSoundDuration)
-            {
-                if (IsValid(TankGameMode))
+                bMoveVetical = AxisValue != 0.f;
+                if (AxisValue == 0.f || bMoveHorizontal)
                 {
-                    LastPlaySoundTime = Gameplay::GetTimeSeconds();
-
-                    TankGameMode.GetSoundManager().PlayGameSound(SoundName::MoveSound);
+                    return;
                 }
-            }
 
-            FHitResult HitResult;
-            TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
-            TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 90. : -90., 0., 0.));
+                if (Gameplay::GetTimeSeconds() - LastPlaySoundTime > MoveSoundDuration)
+                {
+                    if (IsValid(TankGameMode))
+                    {
+                        LastPlaySoundTime = Gameplay::GetTimeSeconds();
+
+                        TankGameMode.GetSoundManager().PlayGameSound(SoundName::MoveSound);
+                    }
+                }
+
+                FHitResult HitResult;
+                TankRenderComp.AddRelativeLocation(FVector::UpVector * MoveSpeed * Gameplay::GetWorldDeltaSeconds() * AxisValue, true, HitResult, true);
+                TankRenderComp.SetRelativeRotation(FRotator(AxisValue > 0. ? 90. : -90., 0., 0.));
+            }
         }
         else
         {
@@ -232,19 +242,37 @@ class ATankPawn : APawn
         return CurrentTankState;
     }
 
+    UFUNCTION()
+    void DelayChangePlayerTankStateCallback()
+    {
+        ChangePlayerTankState(NeedChangeTankState);
+    }
+
+    void ChangePlayerTankStateDelay(EPlayerTankState State, float Time)
+    {
+        NeedChangeTankState = State;
+        System::ClearTimer(this, "DelayChangePlayerTankStateCallback");
+
+        System::SetTimer(this, n"DelayChangePlayerTankStateCallback", Time, false);
+    }
+
     void ChangePlayerTankState(EPlayerTankState State)
     {
+        System::ClearTimer(this, "DelayChangePlayerTankStateCallback");
+
         switch (State)
         {
             case EPlayerTankState::EPTS_Spawn:
                 if (IsValid(TankGameMode))
                 {
-                    TankGameMode.GetEffectMamager().PlayEffect(EffectName::TankSpawn, TankRenderComp.GetWorldLocation(), TankRenderComp, 6.);
+                    TankGameMode.GetEffectMamager().PlayEffect(EffectName::TankSpawn, TankRenderComp.GetWorldLocation(), TankRenderComp, SpawnTime);
+                    ChangePlayerTankStateDelay(EPlayerTankState::EPTS_Normal, SpawnTime);
                 }
                 break;
             case EPlayerTankState::EPTS_Super:
                 break;
             case EPlayerTankState::EPTS_Normal:
+                TankRenderComp.SetHiddenInGame(false);
                 break;
             case EPlayerTankState::EPTS_Dead:
                 break;
@@ -254,5 +282,10 @@ class ATankPawn : APawn
                 break;
         }
         CurrentTankState = State;
+    }
+
+    protected bool CanMove()
+    {
+        return CurrentTankState != EPlayerTankState::EPTS_Spawn;
     }
 };
