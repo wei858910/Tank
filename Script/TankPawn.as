@@ -66,7 +66,8 @@ class ATankPawn : APawn
     UFUNCTION()
     private void OnTurnWalltype(FKey Key)
     {
-        if (++CurrentSpawnWallType > uint8(EWallType::EWT_Ice))
+        ++CurrentSpawnWallType;
+        if (CurrentSpawnWallType > uint8(EWallType::EWT_Ice))
         {
             CurrentSpawnWallType = 0;
         }
@@ -94,7 +95,6 @@ class ATankPawn : APawn
         else
         {
             // 编辑墙壁
-            ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
             if (IsValid(TankGameMode))
             {
                 AMapManager MapManager = TankGameMode.GetMapManager();
@@ -190,7 +190,6 @@ class ATankPawn : APawn
         CurrentPlayMode = Mode;
         if (CurrentPlayMode == ETankMode::ETM_Edit)
         {
-            ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
             if (IsValid(TankGameMode))
             {
                 AMapManager MapManager = TankGameMode.GetMapManager();
