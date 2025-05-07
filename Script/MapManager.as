@@ -1,4 +1,4 @@
-class AMapManager : AActor
+class AMapManager : ACanDamageActor
 {
     UPROPERTY(DefaultComponent, RootComponent)
     USceneComponent Root;

@@ -1,4 +1,4 @@
-class ABulletActor : AActor
+class ABulletActor : ACanDamageActor
 {
     UPROPERTY(DefaultComponent, RootComponent)
     USceneComponent Root;
@@ -16,40 +16,23 @@ class ABulletActor : AActor
     UFUNCTION()
     private void OnBulletBeginOverlap(UPrimitiveComponent OverlappedComponent, AActor OtherActor, UPrimitiveComponent OtherComp, int OtherBodyIndex, bool bFromSweep, const FHitResult&in SweepResult)
     {
-        UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(OtherComp);
-        AEnemyActor          Enemy = Cast<AEnemyActor>(OtherActor);
-        if (IsValid(Wall))
+        ACanDamageActor CanDamageActor = Cast<ACanDamageActor>(OtherActor);
+        ATankPawn       TankPawn = Cast<ATankPawn>(OtherActor);
+        if (IsValid(CanDamageActor))
         {
-            if (Wall.Hited())
+            if (CanDamageActor.CanDamagedByBullet(this, OtherComp))
             {
                 PlayBulletEffect();
-
                 IdleSelf();
             }
         }
-        else if (IsValid(Cast<UBoxComponent>(OtherComp)))
+        else if (IsValid(TankPawn))
         {
-            PlayBulletEffect();
-
-            IdleSelf();
-        }
-        else if (IsValid(Cast<ABulletActor>(OtherActor)))
-        {
-            PlayBulletEffect();
-
-            IdleSelf();
-        }
-        else if (IsValid(Enemy))
-        {
-            Enemy.Hurt();
-            PlayBulletEffect();
-
-            IdleSelf();
-        }
-        else if (IsValid(Cast<ATankPawn>(OtherActor)))
-        {
-            PlayBulletEffect();
-            IdleSelf();
+            if (TankPawn.CanDamagedByBullet(this, OtherComp))
+            {
+                PlayBulletEffect();
+                IdleSelf();
+            }
         }
     }
 

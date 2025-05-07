@@ -196,4 +196,9 @@ class ATankPawn : APawn
             }
         }
     }
+
+    bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp)
+    {
+        return true;
+    }
 };

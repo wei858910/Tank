@@ -1,4 +1,4 @@
-class AEnemyActor : AActor
+class AEnemyActor : ACanDamageActor
 {
     UPROPERTY(DefaultComponent, RootComponent)
     UPaperSpriteComponent TankRenderComp;
@@ -116,5 +116,11 @@ class AEnemyActor : AActor
             TankGameMode.GetSoundManager().PlayGameSound(SoundName::EnemyCrack);
             TankGameMode.GetEffectMamager().PlayEffect(EffectName::TankBoom, GetActorLocation());
         }
+    }
+
+    bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp) override
+    {
+        Hurt();
+        return true;
     }
 };
