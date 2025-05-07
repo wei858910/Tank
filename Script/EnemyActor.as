@@ -8,15 +8,15 @@ class AEnemyActor : ACanDamageActor
     protected float CheckBarrierTick = 0.;
     protected int32 HP = 5;
 
-    protected float MinTime = 2.;
-    protected float MaxTime = 7.;
+    protected float MinTime = 1.2;
+    protected float MaxTime = 2.8;
 
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
         System::SetTimer(this, n"DoFire", Math::RandRange(0.5, 1.5), false);
 
-        System::SetTimer(this, n"RandomDirection", Math::RandRange(MinTime, MaxTime), false);
+        System::SetTimer(this, n"TurnDirection", Math::RandRange(MinTime, MaxTime), false);
     }
 
     UFUNCTION(BlueprintOverride)
@@ -46,9 +46,17 @@ class AEnemyActor : ACanDamageActor
     }
 
     UFUNCTION()
+    void TurnDirection()
+    {
+        if (Math::RandRange(0., 1.) < 0.6)
+        {
+            RandomDirection();
+        }
+        System::SetTimer(this, n"TurnDirection", Math::RandRange(MinTime, MaxTime), false);
+    }
+
     protected void RandomDirection()
     {
-        System::SetTimer(this, n"RandomDirection", Math::RandRange(MinTime, MaxTime), false);
         float PitchValue = 0.;
         int32 RandRotateFlag = Math::RandRange(0, 3);
         PitchValue = RandRotateFlag * 90.;
