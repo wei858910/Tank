@@ -3,9 +3,6 @@ class AEnemyActor : ACanDamageActor
     UPROPERTY(DefaultComponent, RootComponent)
     UPaperSpriteComponent TankRenderComp;
 
-    UPROPERTY()
-    ABulletActor Bullet = nullptr;
-
     protected float MoveSpeed;
     protected float CheckBarrierInterval = 0.3;
     protected float CheckBarrierTick = 0.;
@@ -72,22 +69,19 @@ class AEnemyActor : ACanDamageActor
     UFUNCTION()
     protected void DoFire()
     {
-        System::SetTimer(this, n"DoFire", Math::RandRange(0.5, 1.5), false);
+        ABulletActor Bullet = nullptr;
+
+        System::SetTimer(this, n"DoFire", Math::RandRange(1.5, 3.), false);
         if (!IsValid(Bullet))
         {
             Bullet = Cast<ABulletActor>(SpawnActor(ABulletActor::StaticClass(), FVector(0., 1000., 0), FRotator::ZeroRotator));
         }
 
-        if (!Bullet.isIdled())
-        {
-            return;
-        }
-
         if (IsValid(Bullet))
         {
+            Bullet.SetBulletType(EBulletType::EBT_Enemy);
             Bullet.SetActorLocation(GetActorLocation() + GetActorForwardVector() * 18);
             Bullet.SetActorRotation(GetActorRotation());
-
             Bullet.DoFire();
         }
     }
@@ -120,7 +114,12 @@ class AEnemyActor : ACanDamageActor
 
     bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp) override
     {
-        Hurt();
-        return true;
+        if (BulletActor.GetBulletType() == EBulletType::EBT_Player)
+        {
+            Hurt();
+            return true;
+        }
+
+        return false;
     }
 };

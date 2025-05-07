@@ -79,6 +79,7 @@ class ATankPawn : APawn
             ABulletActor Bullet = Cast<ABulletActor>(SpawnActor(ABulletActor::StaticClass(), TankRenderComp.GetRelativeLocation() + TankRenderComp.GetForwardVector() * 17, TankRenderComp.GetRelativeRotation()));
             if (IsValid(Bullet))
             {
+                Bullet.SetBulletType(EBulletType::EBT_Player);
                 Bullet.DoFire();
             }
         }
@@ -199,6 +200,10 @@ class ATankPawn : APawn
 
     bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp)
     {
-        return true;
+        if(BulletActor.GetBulletType() == EBulletType::EBT_Enemy)
+        {
+            return true;
+        }
+        return false;
     }
 };

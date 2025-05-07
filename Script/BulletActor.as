@@ -1,4 +1,9 @@
-class ABulletActor : ACanDamageActor
+
+enum EBulletType
+{
+    EBT_Player,
+    EBT_Enemy
+} class ABulletActor : ACanDamageActor
 {
     UPROPERTY(DefaultComponent, RootComponent)
     USceneComponent Root;
@@ -13,6 +18,8 @@ class ABulletActor : ACanDamageActor
 
     protected float BulletSpeed = 0.;
 
+    protected EBulletType BulletType;
+
     UFUNCTION()
     private void OnBulletBeginOverlap(UPrimitiveComponent OverlappedComponent, AActor OtherActor, UPrimitiveComponent OtherComp, int OtherBodyIndex, bool bFromSweep, const FHitResult&in SweepResult)
     {
@@ -22,16 +29,14 @@ class ABulletActor : ACanDamageActor
         {
             if (CanDamageActor.CanDamagedByBullet(this, OtherComp))
             {
-                PlayBulletEffect();
-                IdleSelf();
+                DestroySelf();
             }
         }
         else if (IsValid(TankPawn))
         {
             if (TankPawn.CanDamagedByBullet(this, OtherComp))
             {
-                PlayBulletEffect();
-                IdleSelf();
+                DestroySelf();
             }
         }
     }
@@ -56,16 +61,15 @@ class ABulletActor : ACanDamageActor
         AddActorWorldOffset(GetActorForwardVector() * BulletSpeed * DeltaSeconds);
     }
 
-    // UFUNCTION(BlueprintOverride)
-    // void Destroyed()
-    // {
-    //     ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
-    //     if (IsValid(TankGameMode))
-    //     {
-    //         TankGameMode.GetSoundManager().PlayGameSound(SoundName::BulletCrackSound);
-    //         TankGameMode.GetEffectMamager().PlayEffect(EffectName::BulletBoom, GetActorLocation());
-    //     }
-    // }
+    EBulletType GetBulletType()
+    {
+        return BulletType;
+    }
+
+    void SetBulletType(EBulletType Type)
+    {
+        BulletType = Type;
+    }
 
     void PlayBulletEffect()
     {
@@ -88,14 +92,15 @@ class ABulletActor : ACanDamageActor
         UpdateBulletFly(DeltaSeconds);
     }
 
-    void IdleSelf()
+    void DestroySelf()
     {
-        BulletSpeed = 0.;
-        SetActorLocation(FVector(0., 1000., 0.));
+        PlayBulletEffect();
+        DestroyActor();
     }
 
-    bool isIdled()
+    bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp) override
     {
-        return BulletSpeed == 0.;
+        DestroySelf();
+        return true;
     }
 };
