@@ -10,6 +10,8 @@ class ATankGameMode : AGameMode
 
     protected USoundManager SoundManager;
 
+    protected AEnemyManager EnemyManager;
+
     ATankPawn TankPawn;
 
     UFUNCTION(BlueprintOverride)
@@ -18,13 +20,13 @@ class ATankGameMode : AGameMode
         MapManager = Cast<AMapManager>(SpawnActor(AMapManager::StaticClass()));
         GetSoundManager().PlayGameSound(SoundName::StartSound);
 
-        // 测试代码 生成敌人坦克
-        AEnemyActor EnemyTank = Cast<AEnemyActor>(SpawnActor(AEnemyActor::StaticClass(), FVector(0., 0., 190.), FRotator(-90, 0., 0.)));
-        UPaperSprite TankSprite = Cast<UPaperSprite>(LoadObject(nullptr, "/Game/Textures/Enemy/tankEnemy_Sprite.tankEnemy_Sprite"));
-        if(IsValid(EnemyTank))
+        EnemyManager = Cast<AEnemyManager>(SpawnActor(AEnemyManager::StaticClass()));
+        if (IsValid(EnemyManager))
         {
-            EnemyTank.SetTankData(TankSprite, 50.);
+            EnemyManager.BeginMatch();
         }
+
+        LoadMapData("map01");
     }
 
     AMapManager GetMapManager()
@@ -51,6 +53,11 @@ class ATankGameMode : AGameMode
         }
 
         return SoundManager;
+    }
+
+    AEnemyManager GetEnemyManager()
+    {
+        return EnemyManager;
     }
 
     UFUNCTION(Exec)
@@ -108,5 +115,4 @@ class ATankGameMode : AGameMode
             GetEffectMamager().PlayEffect(EffectName::Invincibility, TankPawn.TankRenderComp.GetWorldLocation(), TankPawn.TankRenderComp, 100);
         }
     }
-
 };
