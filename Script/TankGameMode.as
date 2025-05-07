@@ -17,6 +17,14 @@ class ATankGameMode : AGameMode
     {
         MapManager = Cast<AMapManager>(SpawnActor(AMapManager::StaticClass()));
         GetSoundManager().PlayGameSound(SoundName::StartSound);
+
+        // 测试代码 生成敌人坦克
+        AEnemyActor EnemyTank = Cast<AEnemyActor>(SpawnActor(AEnemyActor::StaticClass(), FVector(0., 0., 190.), FRotator(-90, 0., 0.)));
+        UPaperSprite TankSprite = Cast<UPaperSprite>(LoadObject(nullptr, "/Game/Textures/Enemy/tankEnemy_Sprite.tankEnemy_Sprite"));
+        if(IsValid(EnemyTank))
+        {
+            EnemyTank.SetTankData(TankSprite, 50.);
+        }
     }
 
     AMapManager GetMapManager()
@@ -100,4 +108,5 @@ class ATankGameMode : AGameMode
             GetEffectMamager().PlayEffect(EffectName::Invincibility, TankPawn.TankRenderComp.GetWorldLocation(), TankPawn.TankRenderComp, 100);
         }
     }
+
 };
