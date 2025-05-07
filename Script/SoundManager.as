@@ -4,6 +4,7 @@ namespace SoundName
     const FName FireSound = n"FireSound";
     const FName MoveSound = n"MoveSound";
     const FName StartSound = n"StartSound";
+    const FName EnemyCrack = n"EnemyCrack";
 } // namespace SoundName
 
 namespace SoundPath
@@ -12,6 +13,7 @@ namespace SoundPath
     const FString FireSoundPath = "/Game/Sound/attack.attack";
     const FString MoveSoundPath = "/Game/Sound/move.move";
     const FString StartSoundPath = "/Game/Sound/start.start";
+    const FString EnemyCrackPath = "/Game/Sound/tankCrack.tankCrack";
 } // namespace SoundPath
 
 struct FSoundSource
@@ -30,6 +32,7 @@ class USoundManager : UObject
         RegistSound(SoundName::FireSound, SoundPath::FireSoundPath);
         RegistSound(SoundName::BulletCrackSound, SoundPath::BulletCrackSoundPath);
         RegistSound(SoundName::MoveSound, SoundPath::MoveSoundPath);
+        RegistSound(SoundName::EnemyCrack, SoundPath::EnemyCrackPath);
     }
 
     void RegistSound(FName NameOfSound, FString Path)

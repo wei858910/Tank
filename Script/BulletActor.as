@@ -11,26 +11,45 @@ class ABulletActor : AActor
     default BulletRender.SetCollisionProfileName(n"OverlapAll");
     default BulletRender.OnComponentBeginOverlap.AddUFunction(this, n"OnBulletBeginOverlap");
 
-    protected float BulletSpeed = 130.;
+    protected float BulletSpeed = 0.;
 
     UFUNCTION()
     private void OnBulletBeginOverlap(UPrimitiveComponent OverlappedComponent, AActor OtherActor, UPrimitiveComponent OtherComp, int OtherBodyIndex, bool bFromSweep, const FHitResult&in SweepResult)
     {
         UWallSpriteComponent Wall = Cast<UWallSpriteComponent>(OtherComp);
+        AEnemyActor          Enemy = Cast<AEnemyActor>(OtherActor);
         if (IsValid(Wall))
         {
             if (Wall.Hited())
             {
-                DestroyActor();
+                PlayBulletEffect();
+
+                IdleSelf();
             }
         }
         else if (IsValid(Cast<UBoxComponent>(OtherComp)))
         {
-            DestroyActor();
+            PlayBulletEffect();
+
+            IdleSelf();
         }
         else if (IsValid(Cast<ABulletActor>(OtherActor)))
         {
-            DestroyActor();
+            PlayBulletEffect();
+
+            IdleSelf();
+        }
+        else if (IsValid(Enemy))
+        {
+            Enemy.Hurt();
+            PlayBulletEffect();
+
+            IdleSelf();
+        }
+        else if (IsValid(Cast<ATankPawn>(OtherActor)))
+        {
+            PlayBulletEffect();
+            IdleSelf();
         }
     }
 
@@ -54,8 +73,18 @@ class ABulletActor : AActor
         AddActorWorldOffset(GetActorForwardVector() * BulletSpeed * DeltaSeconds);
     }
 
-    UFUNCTION(BlueprintOverride)
-    void Destroyed()
+    // UFUNCTION(BlueprintOverride)
+    // void Destroyed()
+    // {
+    //     ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
+    //     if (IsValid(TankGameMode))
+    //     {
+    //         TankGameMode.GetSoundManager().PlayGameSound(SoundName::BulletCrackSound);
+    //         TankGameMode.GetEffectMamager().PlayEffect(EffectName::BulletBoom, GetActorLocation());
+    //     }
+    // }
+
+    void PlayBulletEffect()
     {
         ATankGameMode TankGameMode = Cast<ATankGameMode>(Gameplay::GetGameMode());
         if (IsValid(TankGameMode))
@@ -74,5 +103,16 @@ class ABulletActor : AActor
     void Tick(float DeltaSeconds)
     {
         UpdateBulletFly(DeltaSeconds);
+    }
+
+    void IdleSelf()
+    {
+        BulletSpeed = 0.;
+        SetActorLocation(FVector(0., 1000., 0.));
+    }
+
+    bool isIdled()
+    {
+        return BulletSpeed == 0.;
     }
 };
