@@ -3,6 +3,7 @@ namespace EffectName
     const FName BulletBoom = n"BulletBoom";
     const FName Invincibility = n"Invincibility";
     const FName TankBoom = n"TankBoom";
+    const FName TankSpawn = n"TankSpawn";
 } // namespace EffectName
 
 namespace EffectPath
@@ -10,6 +11,7 @@ namespace EffectPath
     const FString BulletEffectPath = "/Game/Textures/Effect/tankBulletEffect.tankBulletEffect";
     const FString InvincibilityPath = "/Game/Textures/Effect/tankInvincibilityEffect.tankInvincibilityEffect";
     const FString TankBoomPath = "/Game/Textures/Effect/tankBoom.tankBoom";
+    const FString TankSpawnPath = "/Game/Textures/Effect/tankSpawnEffect.tankSpawnEffect";
 } // namespace EffectPath
 
 struct FEffectSource
@@ -51,6 +53,7 @@ class UEffectManager : UObject
         RegistEffect(EffectName::BulletBoom, EffectPath::BulletEffectPath);
         RegistEffect(EffectName::Invincibility, EffectPath::InvincibilityPath);
         RegistEffect(EffectName::TankBoom, EffectPath::TankBoomPath);
+        RegistEffect(EffectName::TankSpawn, EffectPath::TankSpawnPath);
     }
 
     UPaperFlipbook GetFlipBookSourceByName(FName NameOfEffect)

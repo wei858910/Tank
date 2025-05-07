@@ -4,6 +4,15 @@ enum ETankMode
     ETM_Edit
 }
 
+enum EPlayerTankState
+{
+    EPTS_Spawn,
+    EPTS_Super,
+    EPTS_Normal,
+    EPTS_Dead,
+    EPTS_Double
+}
+
 class ATankPawn : APawn
 {
     UPROPERTY(DefaultComponent, RootComponent)
@@ -48,6 +57,8 @@ class ATankPawn : APawn
 
     protected ABulletActor HoldBullet = nullptr;
 
+    protected EPlayerTankState CurrentTankState = EPlayerTankState::EPTS_Normal;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
@@ -61,6 +72,8 @@ class ATankPawn : APawn
         {
             MoveSoundDuration = TankGameMode.GetSoundManager().GetSoundDuration(SoundName::MoveSound);
         }
+
+        ChangePlayerTankState(EPlayerTankState::EPTS_Spawn);
     }
 
     UFUNCTION()
@@ -212,5 +225,34 @@ class ATankPawn : APawn
             return true;
         }
         return false;
+    }
+
+    EPlayerTankState GetPlayerTankState()
+    {
+        return CurrentTankState;
+    }
+
+    void ChangePlayerTankState(EPlayerTankState State)
+    {
+        switch (State)
+        {
+            case EPlayerTankState::EPTS_Spawn:
+                if (IsValid(TankGameMode))
+                {
+                    TankGameMode.GetEffectMamager().PlayEffect(EffectName::TankSpawn, TankRenderComp.GetWorldLocation(), TankRenderComp, 6.);
+                }
+                break;
+            case EPlayerTankState::EPTS_Super:
+                break;
+            case EPlayerTankState::EPTS_Normal:
+                break;
+            case EPlayerTankState::EPTS_Dead:
+                break;
+            case EPlayerTankState::EPTS_Double:
+                break;
+            default:
+                break;
+        }
+        CurrentTankState = State;
     }
 };
