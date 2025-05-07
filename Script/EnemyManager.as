@@ -9,30 +9,15 @@ class AEnemyManager : AActor
 
         FVector SpawnPosition;
 
-        if (GetSpawnPosition(SpawnPosition))
+        for (int32 i = 0; i < 3; ++i)
         {
-            AEnemyActor Enemy = Cast<AEnemyActor>(SpawnActor(AEnemyActor::StaticClass(), SpawnPosition, FRotator(-90., 0., 0.)));
-            if (IsValid(Enemy) && IsValid(TankSprite))
+            if (GetSpawnPosition(SpawnPosition))
             {
-                Enemy.SetTankData(TankSprite, 60.);
-            }
-        }
-
-        if (GetSpawnPosition(SpawnPosition))
-        {
-            AEnemyActor Enemy = Cast<AEnemyActor>(SpawnActor(AEnemyActor::StaticClass(), SpawnPosition, FRotator(-90., 0., 0.)));
-            if (IsValid(Enemy) && IsValid(TankSprite))
-            {
-                Enemy.SetTankData(TankSprite, 60.);
-            }
-        }
-
-        if (GetSpawnPosition(SpawnPosition))
-        {
-            AEnemyActor Enemy = Cast<AEnemyActor>(SpawnActor(AEnemyActor::StaticClass(), SpawnPosition, FRotator(-90., 0., 0.)));
-            if (IsValid(Enemy) && IsValid(TankSprite))
-            {
-                Enemy.SetTankData(TankSprite, 60.);
+                AEnemyActor Enemy = Cast<AEnemyActor>(SpawnActor(AEnemyActor::StaticClass(), SpawnPosition, FRotator(-90., 0., 0.)));
+                if (IsValid(Enemy) && IsValid(TankSprite))
+                {
+                    Enemy.SetTankData(TankSprite, 60.);
+                }
             }
         }
     }
