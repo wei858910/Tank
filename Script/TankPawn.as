@@ -46,6 +46,8 @@ class ATankPawn : APawn
 
     protected ATankGameMode TankGameMode;
 
+    protected ABulletActor HoldBullet = nullptr;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
@@ -76,11 +78,17 @@ class ATankPawn : APawn
         if (CurrentPlayMode == ETankMode::ETM_Play)
         {
             // 开炮
-            ABulletActor Bullet = Cast<ABulletActor>(SpawnActor(ABulletActor::StaticClass(), TankRenderComp.GetRelativeLocation() + TankRenderComp.GetForwardVector() * 17, TankRenderComp.GetRelativeRotation()));
-            if (IsValid(Bullet))
+
+            if (!IsValid(HoldBullet))
             {
-                Bullet.SetBulletType(EBulletType::EBT_Player);
-                Bullet.DoFire();
+                HoldBullet = Cast<ABulletActor>(SpawnActor(ABulletActor::StaticClass(), FVector(0., 1000., 0), FRotator::ZeroRotator));
+                if (IsValid(HoldBullet))
+                {
+                    HoldBullet.SetBulletType(EBulletType::EBT_Player);
+                    HoldBullet.SetActorLocation(TankRenderComp.GetRelativeLocation() + TankRenderComp.GetForwardVector() * 17);
+                    HoldBullet.SetActorRotation(TankRenderComp.GetRelativeRotation());
+                    HoldBullet.DoFire();
+                }
             }
         }
         else
@@ -200,7 +208,7 @@ class ATankPawn : APawn
 
     bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp)
     {
-        if(BulletActor.GetBulletType() == EBulletType::EBT_Enemy)
+        if (BulletActor.GetBulletType() == EBulletType::EBT_Enemy)
         {
             return true;
         }
