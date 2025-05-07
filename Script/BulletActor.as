@@ -100,6 +100,11 @@ enum EBulletType
 
     bool CanDamagedByBullet(ABulletActor BulletActor, UPrimitiveComponent HitComp) override
     {
+        if(BulletActor.GetBulletType() == BulletType)
+        {
+            return false;
+        }
+        
         DestroySelf();
         return true;
     }
