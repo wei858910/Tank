@@ -115,4 +115,15 @@ class ATankGameMode : AGameMode
             GetEffectMamager().PlayEffect(EffectName::Invincibility, TankPawn.TankRenderComp.GetWorldLocation(), TankPawn.TankRenderComp, 100);
         }
     }
+
+    UFUNCTION(Exec)
+    void SpawnPowerupItem(int32 Type)
+    {
+        EPowerupItemType ItemType = EPowerupItemType(Type);
+        APowerupItem     PowerupItem = Cast<APowerupItem>(SpawnActor(APowerupItem::StaticClass()));
+        if (IsValid(PowerupItem))
+        {
+            PowerupItem.SetItemType(ItemType);
+        }
+    }
 };
