@@ -46,12 +46,12 @@ class AEnemyManager : AActor
             FCollisionShape CollisionShape;
             CollisionShape.ShapeType = ECollisionShape::Box;
             CollisionShape.SetBox(FVector(10., 10., 10.));
+            FindPosition = FindPosition + FVector::ForwardVector * 5.5 * 21. * i;
             if (!System::SweepSingleByChannel(HitResult, FindPosition, FindPosition, FRotator::ZeroRotator.Quaternion(), ECollisionChannel::ECC_Camera, CollisionShape))
             {
                 Position = FindPosition;
                 return true;
             }
-            FindPosition = FindPosition + FVector::ForwardVector * 6.5 * 32.;
         }
         return false;
     }
