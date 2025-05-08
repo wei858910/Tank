@@ -37,7 +37,12 @@ class APowerupItem : AActor
                 case EPowerupItemType::EPIT_Life:
                     break;
                 case EPowerupItemType::EPIT_Time:
+                    if (IsValid(TankGameMode))
+                    {
+                        TankGameMode.GetEnemyManager().PauseAllEnemyTanks(true);
+                    }
                     break;
+
                 case EPowerupItemType::EPIT_Chovel:
                     break;
                 case EPowerupItemType::EPIT_Boom:

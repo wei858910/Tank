@@ -11,6 +11,9 @@ class AEnemyActor : ACanDamageActor
     protected float MinTime = 1.2;
     protected float MaxTime = 2.8;
 
+    protected bool bPause = false;
+    protected float PauseTime = 6.;
+
     UFUNCTION(BlueprintOverride)
     void BeginPlay()
     {
@@ -22,6 +25,10 @@ class AEnemyActor : ACanDamageActor
     UFUNCTION(BlueprintOverride)
     void Tick(float DeltaSeconds)
     {
+        if (bPause)
+        {
+            return;
+        }
         UpdateMove(DeltaSeconds);
     }
 
@@ -136,5 +143,22 @@ class AEnemyActor : ACanDamageActor
         }
 
         return false;
+    }
+
+    void PauseSelf(bool bPaused)
+    {
+        bPause = bPaused;
+        System::ClearTimer(this, "TurnDirection");
+        System::ClearTimer(this, "DoFire");
+        System::SetTimer(this, n"UnPauseSelf", PauseTime, false);
+    }
+
+    UFUNCTION()
+    void UnPauseSelf()
+    {
+        bPause = false;
+        System::SetTimer(this, n"DoFire", Math::RandRange(0.5, 1.5), false);
+
+        System::SetTimer(this, n"TurnDirection", Math::RandRange(MinTime, MaxTime), false);
     }
 };

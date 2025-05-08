@@ -40,4 +40,15 @@ class AEnemyManager : AActor
         }
         return false;
     }
+
+    UFUNCTION()
+    void PauseAllEnemyTanks(bool bPause)
+    {
+        TArray<AEnemyActor> AllEnemyTanks;
+        GetAllActorsOfClass(AEnemyActor::StaticClass(), AllEnemyTanks);
+        for(auto& Item : AllEnemyTanks)
+        {
+            Item.PauseSelf(true);
+        }
+    }
 };
