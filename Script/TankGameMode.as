@@ -1,6 +1,7 @@
 class ATankGameMode : AGameMode
 {
     default DefaultPawnClass = ATankPawn::StaticClass();
+    default HUDClass = ATankHUD::StaticClass();
 
     UPROPERTY()
     AMapManager MapManager;
@@ -125,5 +126,10 @@ class ATankGameMode : AGameMode
         {
             PowerupItem.SetItemType(ItemType);
         }
+    }
+
+    void TurnLevel(FName LevelName)
+    {
+        
     }
 };
