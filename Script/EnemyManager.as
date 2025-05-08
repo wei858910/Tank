@@ -51,4 +51,14 @@ class AEnemyManager : AActor
             Item.PauseSelf(true);
         }
     }
+
+    void BoomAllEnemyTanks()
+    {
+        TArray<AEnemyActor> AllEnemyTanks;
+        GetAllActorsOfClass(AEnemyActor::StaticClass(), AllEnemyTanks);
+        for(auto& Item : AllEnemyTanks)
+        {
+            Item.DestroyActor();
+        }
+    }
 };

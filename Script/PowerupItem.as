@@ -46,6 +46,10 @@ class APowerupItem : AActor
                 case EPowerupItemType::EPIT_Chovel:
                     break;
                 case EPowerupItemType::EPIT_Boom:
+                    if (IsValid(TankGameMode))
+                    {
+                        TankGameMode.GetEnemyManager().BoomAllEnemyTanks();
+                    }
                     break;
                 case EPowerupItemType::EPIT_Star:
                     break;
